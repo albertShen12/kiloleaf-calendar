@@ -1,4 +1,4 @@
-import React, {useState}  from "react";
+import React, {useState,useEffect}  from "react";
 import {Icon,Menu,Dropdown} from "antd";
 
 const UserDropdown=()=>(
@@ -10,13 +10,10 @@ const UserDropdown=()=>(
 );
 
 const Header = props => {
-  const [percent,setPercent]=useState(70);
-  const handleClick=()=>{
-    setPercent(30);
-    setTimeout(()=>{
-      setPercent(70);
-    },2000);
-  };
+  const [user,setUser]=useState(undefined);
+  useEffect(()=>{
+    console.log("user changed:",user?user.name:"empty user");
+  },[user]);
 
   return (
     <header className="qy-header">
@@ -25,13 +22,16 @@ const Header = props => {
         <span>千叶日历</span>
       </div>
       <div className="header-right">
-         <Dropdown overlay={UserDropdown}>
-
+  {user===undefined?(<div className="header-user">
+          <span className="mr-m" onClick={()=>setUser({name:"guest"})}>登录</span>
+          <span>注册</span>
+      </div>):
+      (<Dropdown overlay={UserDropdown}>
             <div className="header-user">
                <img src={process.env.PUBLIC_URL+'/lu.jpg'}/>
                <Icon type="down" style={{fontSize:"20px"}} />
                </div>
-         </Dropdown>
+         </Dropdown>)}
       </div>
     </header>
   );
