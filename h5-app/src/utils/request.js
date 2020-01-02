@@ -16,7 +16,7 @@ axios.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-const ERROR_CODE: any = {// 1xxx为接口自定义业务错误，252xx为通用错误
+const ERROR_CODE = {// 1xxx为接口自定义业务错误，252xx为通用错误
   25201: '参数不匹配',
   25202: '参数校验不合格',
 };
@@ -40,7 +40,15 @@ axios.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-const axiosPromise = (method: string) => (url: string, params: Object, data: Object, config: Object | null) => {
+const getCacheItem=(k)=>sessionStorage.getItem("req_cache_"+k);
+const setCacheItem=(k,v)=>sessionStorage.setItem("req_cache_"+k,v);
+
+const axiosPromise = (method,cacheSign) => (url, params, data, config) => {
+  if(cacheSign && getCacheItem(url)){
+    return new Promise((resolve,reject)=>{
+      resolve(getCacheItem(url));
+    });
+  }
   return new Promise((resolve, reject) => {
     const conf = Object.assign({}, {
       params: params,
@@ -51,15 +59,20 @@ const axiosPromise = (method: string) => (url: string, params: Object, data: Obj
     JSON.stringify(params) !== '{}' && console.log('request params:', JSON.stringify(params));
     JSON.stringify(data) !== '{}' && console.log('request data:', JSON.stringify(data));
     return axios(url, conf)
-      .then((res: any) => {
+      .then((res) => {
+        if(cacheSign){
+          setCacheItem(url,res.data);
+        }
         resolve(res);
-      }).catch((err: any) => {
+      }).catch((err) => {
         reject(err);
       });
   });
 };
 
 const request = {
+  getStorage:axiosPromise('get',true),
+  postStorage:axiosPromise('get',true),
   get: axiosPromise('get'),
   post: axiosPromise('post'),
   put: axiosPromise('put'),
