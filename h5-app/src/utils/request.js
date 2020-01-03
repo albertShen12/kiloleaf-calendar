@@ -1,10 +1,9 @@
 import axios from 'axios';
 import NProgress from 'nprogress';
 import { notification, message } from 'antd';
-import { routerRedux } from 'dva/router';
 
 axios.defaults.timeout = 5000;
-axios.defaults.baseURL = '/api/v1';
+// axios.defaults.baseURL = '/api/v1';
 // axios.defaults.baseURL = 'http://139.196.80.87:8093/mock/117/';
 axios.defaults.withCredentials = true;
 

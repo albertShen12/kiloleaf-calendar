@@ -1,5 +1,6 @@
 import React, {useState,useEffect}  from "react";
 import {Icon,Menu,Dropdown} from "antd";
+import {request} from "../utils/request";
 
 const UserDropdown=()=>(
   <Menu>
@@ -15,6 +16,19 @@ const Header = props => {
     console.log("user changed:",user?user.name:"empty user");
   },[user]);
 
+  const handleLogin=()=>{
+    const params={
+      username:"guest",
+      password:"guest"
+    }
+    request.post("/mock/user/login",params)
+    .then(()=>{
+      setUser({name:"guest"});
+    }).catch(err=>{
+      console.log(err);
+    });
+  };
+
   return (
     <header className="qy-header">
       <div className="header-left">
@@ -23,7 +37,7 @@ const Header = props => {
       </div>
       <div className="header-right">
   {user===undefined?(<div className="header-user">
-          <span className="mr-m" onClick={()=>setUser({name:"guest"})}>登录</span>
+          <span className="mr-m" onClick={handleLogin}>登录</span>
           <span>注册</span>
       </div>):
       (<Dropdown overlay={UserDropdown}>
