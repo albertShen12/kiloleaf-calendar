@@ -6,7 +6,7 @@ import { Button } from "antd";
 const Layout = () => {
   const [count, setCount] = useState(0);
   useEffect(() => {
-    if (count == 3) {
+    if (count === 3) {
       import("../utils/print").then(module => {
         let print = module.default;
         print.alert();

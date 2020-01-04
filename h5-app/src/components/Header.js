@@ -21,7 +21,7 @@ const Header = props => {
       username:"guest",
       password:"guest"
     }
-    request.post("/mock/user/login",params)
+    request.post("/test/user/login",undefined,params)
     .then(()=>{
       setUser({name:"guest"});
     }).catch(err=>{
